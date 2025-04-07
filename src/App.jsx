@@ -1,15 +1,19 @@
-import { useState } from 'react'
-import CodathonComponent from './assets/components/Register'
-import './App.css'
+import Home from "./Pages/Home";
+import Form from "./Pages/Form";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-     <CodathonComponent/>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<Form />} />
+        </Routes>
+      </Router>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
