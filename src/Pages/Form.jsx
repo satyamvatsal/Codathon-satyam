@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { ArrowRight } from "lucide-react";
+import confetti from "canvas-confetti";
 
 const CodathonComponent = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [scholarNo, setScholarNo] = useState("");
   const [phone, setPhone] = useState("");
-  const [college, setCollege] = useState("");
+  const [college, setCollege] = useState("MANIT");
   const [branch, setBranch] = useState("");
   const [year, setYear] = useState("");
   const [message, setMessage] = useState("");
@@ -14,6 +15,16 @@ const CodathonComponent = () => {
   const [showOtherCollege, setShowOtherCollege] = useState(false);
   const [otherCollege, setOtherCollege] = useState("");
 
+  function triggerSuccessEffects() {
+    const audio = new Audio("/success.mp3");
+    audio.play().catch((err) => console.error("Audio play failed:", err));
+
+    confetti({
+      particleCount: 300,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -27,18 +38,20 @@ const CodathonComponent = () => {
     formData.append("college", college === "other" ? otherCollege : college);
 
     try {
-      const response = await fetch("http://10.3.141.39:5000/student/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      const response = await fetch(
+        "https://form.visioncse.tech/student/submit",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          },
+          body: formData.toString(),
         },
-        body: formData.toString(),
-      });
+      );
       const data = await response.json();
       if (response.ok) {
-        // If registration succeeds
-        // You could trigger additional effects here (e.g., confetti, sound) if needed.
         setMessage(data.message || "Successfully registered: ");
+        triggerSuccessEffects();
         setError("");
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else if (response.status === 409) {
@@ -61,8 +74,7 @@ const CodathonComponent = () => {
       <div
         className="hero text-primary-content p-6"
         style={{
-          backgroundImage:
-            "url('https://res.cloudinary.com/dsshwxfk3/image/upload/v1744033872/bg11_njqnki.png')",
+          backgroundImage: "url('/background.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -70,7 +82,7 @@ const CodathonComponent = () => {
         <div className="hero-content text-center">
           <div>
             <img
-              src="https://res.cloudinary.com/dsshwxfk3/image/upload/v1744033590/vision_bxtyb8.png"
+              src="/vision.webp"
               alt="Codathon Logo"
               className="h-24 mx-auto mb-4"
             />
@@ -120,11 +132,11 @@ const CodathonComponent = () => {
 
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Email
+                  Email (same as on HackerEarth)
                 </label>
                 <input
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter email here"
                   className="w-full px-4 py-2 rounded-xl bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400"
                   required
                   onChange={(e) => setEmail(e.target.value)}
@@ -138,7 +150,7 @@ const CodathonComponent = () => {
                 <input
                   type="tel"
                   placeholder="10-digit number"
-                  pattern="[0-9]{10}"
+                  pattern="[6-9][0-9]{9}"
                   className="w-full px-4 py-2 rounded-xl bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400"
                   required
                   onChange={(e) => setPhone(e.target.value)}
@@ -151,7 +163,7 @@ const CodathonComponent = () => {
                 </label>
                 <input
                   type="text"
-                  placeholder="Scholar ID"
+                  placeholder="Scholar No"
                   className="w-full px-4 py-2 rounded-xl bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400"
                   required
                   onChange={(e) => setScholarNo(e.target.value)}
@@ -171,7 +183,6 @@ const CodathonComponent = () => {
                   }}
                   required
                 >
-                  <option value="">Select College</option>
                   <option value="MANIT">MANIT</option>
                   <option value="other">Other</option>
                 </select>
@@ -198,7 +209,7 @@ const CodathonComponent = () => {
                 </label>
                 <input
                   type="text"
-                  placeholder="CSE / IT / ECE etc."
+                  placeholder="CSE / EE / ECE etc."
                   className="w-full px-4 py-2 rounded-xl bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-400"
                   required
                   onChange={(e) => setBranch(e.target.value)}

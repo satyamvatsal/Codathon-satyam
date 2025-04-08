@@ -50,7 +50,7 @@ const CodathonComponent = () => {
             <div>
               <h3 className="font-semibold text-lg text-white">Date & Time</h3>
               <p>April 14, 2025</p>
-              <p>9:00 AM Onwards</p>
+              <p>7:00 PM Onwards</p>
             </div>
           </div>
 
